@@ -27,7 +27,7 @@ Processes Chase Sapphire Preferred credit card statements.
 ### Chase World of Hyatt Processor  
 Processes Chase World of Hyatt credit card statements.
 - **Trigger**: S3 upload to `chase-hyatt/` prefix
-- **Points**: 4x Hyatt properties, 2x Dining/Gas/Grocery, 1x Everything else
+- **Points**: 4x Hyatt stays, 2x Dining/Airfare/Transit/Fitness, 1x Everything else
 - **Output**: CSV to `Processed/` folder + PostgreSQL insert
 
 ## Features

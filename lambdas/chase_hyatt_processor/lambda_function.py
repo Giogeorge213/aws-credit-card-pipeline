@@ -204,8 +204,12 @@ def categorize_merchant(merchant):
    if any(x in merchant_upper for x in ['JETBLUE', 'DELTA', 'UNITED', 'AIR CAN', 'CEBU AIR', 'SOUTHWEST', 'AMERICAN AIR']):
        return 'Airlines'
    
-   # Hotels/Lodging
-   if any(x in merchant_upper for x in ['HYATT', 'MARRIOTT', 'COURTYARD', 'SHERATON', 'HILTON', 'HOTEL', 'UNDER CANVAS', 'VENETIAN', 'PALAZZO', 'TIKI TIKI RESORTS', 'IM HOTEL', 'HOTWIRE', 'BOOKING.COM', 'TRIP.COM']):
+   # Hyatt Properties (separate for 4x points)
+   if 'HYATT' in merchant_upper:
+       return 'Hyatt Property'
+   
+   # Hotels/Lodging (other hotels)
+   if any(x in merchant_upper for x in ['MARRIOTT', 'COURTYARD', 'SHERATON', 'HILTON', 'HOTEL', 'UNDER CANVAS', 'VENETIAN', 'PALAZZO', 'TIKI TIKI RESORTS', 'IM HOTEL', 'HOTWIRE', 'BOOKING.COM', 'TRIP.COM']):
        return 'Hotels/Lodging'
    
    # Fast Food
@@ -263,11 +267,23 @@ def categorize_merchant(merchant):
    return 'Other'
 
 def calculate_hyatt_points(merchant, amount, category):
+   """
+   Chase World of Hyatt card earning structure:
+   - 4x points on Hyatt purchases
+   - 2x points on dining, airfare, local transit, and fitness club memberships
+   - 1x points on all other purchases
+   """
+   if amount < 0:  # Credits/payments don't earn points
+       return 0, 'N/A'
+   
    base_points = int(amount)
    
+   # 4x on Hyatt stays
    if category == 'Hyatt Property':
        return base_points * 4, 'World of Hyatt'
-   elif category in ['Dining', 'Fitness', 'Gas Station', 'Grocery']:
+   # 2x on dining, airfare, transit, fitness
+   elif category in ['Dining', 'Fast Food', 'Airlines', 'Transportation', 'Health/Personal Care']:
        return base_points * 2, 'World of Hyatt'
+   # 1x on everything else
    else:
        return base_points, 'World of Hyatt'
