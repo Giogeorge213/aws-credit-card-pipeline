@@ -11,8 +11,8 @@ aws-credit-card-pipeline/
 │   │   └── lambda_function.py
 │   └── chase_hyatt_processor/       # Chase World of Hyatt statements
 │       └── lambda_function.py
-├── database/                        # (coming soon)
-│   └── schema.sql
+├── database/
+│   └── schema.sql                   # PostgreSQL schema
 └── README.md
 ```
 
