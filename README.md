@@ -1,22 +1,45 @@
 # aws-credit-card-pipeline
 
-I like credit cards so I created an automated AWS pipeline that processes credit card PDF statements using Textract OCR, calculates rewards points, and stores transactions in PostgreSQL with QuickSight dashboards
+I like credit cards so I created an automated AWS pipeline that processes credit card PDF statements using Textract OCR, calculates rewards points, and stores transactions in PostgreSQL with QuickSight dashboards.
 
-## Chase Statement Processor Lambda Function
+## Architecture
 
-AWS Lambda function that processes Chase credit card PDF statements using Amazon Textract, extracts transaction data, categorizes merchants, calculates rewards points, and stores results in a PostgreSQL database.
+```
+aws-credit-card-pipeline/
+├── lambdas/
+│   ├── chase_sapphire_processor/    # Chase Sapphire Preferred statements
+│   │   └── lambda_function.py
+│   └── chase_hyatt_processor/       # Chase World of Hyatt statements
+│       └── lambda_function.py
+├── database/                        # (coming soon)
+│   └── schema.sql
+└── README.md
+```
 
-### Features
+## Lambda Functions
 
-- **PDF Text Extraction**: Uses AWS Textract for async document text detection
-- **Transaction Parsing**: Extracts transactions from Chase Sapphire Preferred statements
-- **Merchant Categorization**: Auto-categorizes merchants (Dining, Airlines, Hotels, etc.)
-- **Points Calculation**: Calculates Chase Ultimate Rewards points based on category multipliers
-- **Foreign Currency Support**: Handles Philippine Peso conversions
-- **Database Storage**: Stores transactions in PostgreSQL using pg8000
-- **CSV Export**: Generates CSV files with extracted data
+### Chase Sapphire Preferred Processor
+Processes Chase Sapphire Preferred credit card statements.
+- **Trigger**: S3 upload to `chase-sapphire/` prefix
+- **Points**: 3x Dining, 2x Transportation, 1x Everything else
+- **Output**: CSV to `Processed/` folder + PostgreSQL insert
 
-### Environment Variables
+### Chase World of Hyatt Processor  
+Processes Chase World of Hyatt credit card statements.
+- **Trigger**: S3 upload to `chase-hyatt/` prefix
+- **Points**: 4x Hyatt properties, 2x Dining/Gas/Grocery, 1x Everything else
+- **Output**: CSV to `Processed/` folder + PostgreSQL insert
+
+## Features
+
+- **PDF Text Extraction**: AWS Textract async document text detection
+- **Transaction Parsing**: Extracts date, merchant, amount from statements
+- **Merchant Categorization**: Auto-categorizes 20+ merchant categories
+- **Points Calculation**: Card-specific rewards point calculations
+- **Foreign Currency Support**: Handles PHP and other currency conversions
+- **Database Storage**: PostgreSQL via pg8000
+
+## Environment Variables
 
 | Variable | Description |
 |----------|-------------|
@@ -26,23 +49,11 @@ AWS Lambda function that processes Chase credit card PDF statements using Amazon
 | `DB_PASSWORD` | Database password |
 | `DB_PORT` | Database port (default: 5432) |
 
-### Dependencies
+## Dependencies
 
 - `boto3` - AWS SDK for Python
 - `pg8000` - Pure Python PostgreSQL driver
 
-### Trigger
+## Filename Convention
 
-S3 trigger on PDF uploads. The filename should follow the format: `YYYYMMDD*.pdf` where the date prefix represents the statement date.
-
-### Output
-
-- Processed CSV files uploaded to `Processed/` folder in S3
-- Debug extracted text saved to `debug/` folder
-- Transactions inserted into PostgreSQL `transactions` table
-
-### Points Calculation
-
-- **Dining/Fast Food**: 3x points
-- **Transportation**: 2x points  
-- **All other categories**: 1x points
+Statement PDFs should follow the format: `YYYYMMDD*.pdf` where the date prefix represents the statement date.
