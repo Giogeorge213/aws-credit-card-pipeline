@@ -4,6 +4,8 @@ I like credit cards so I created an automated AWS pipeline that processes credit
 
 ## Architecture
 
+![Architecture Diagram](docs/credit_card_data_pipeline.drawio.png)
+
 ```
 PDF Upload → S3 → Lambda → Textract OCR → Parse Transactions
                                                 ↓
