@@ -71,9 +71,10 @@ def lambda_handler(event, context):
        next_token = result.get('NextToken')
        if not next_token:
            break
+
    
    # Save debug file
-   debug_key = key.replace('chase-hyatt/', 'Processed/debug-').replace('.pdf', '.txt')
+   debug_key = key.replace('chase-hyatt/', 'debug/hyatt-').replace('.pdf', '.txt')
    s3.put_object(Bucket=bucket, Key=debug_key, Body='\n'.join(text_lines))
    
    # Parse transactions
