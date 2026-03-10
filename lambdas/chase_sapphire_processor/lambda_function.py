@@ -390,19 +390,6 @@ def create_csv_content(data):
    output = io.StringIO()
    writer = csv.writer(output)
    
-   writer.writerow(['=== ACCOUNT INFORMATION ==='])
-   for key, value in data['account_info'].items():
-       writer.writerow([key.replace('_', ' ').title(), value])
-   
-   writer.writerow([])
-   
-   if data['summary']:
-       writer.writerow(['=== SUMMARY INFORMATION ==='])
-       for key, value in data['summary'].items():
-           writer.writerow([key.replace('_', ' ').title(), value])
-       writer.writerow([])
-   
-   writer.writerow(['=== TRANSACTIONS ==='])
    writer.writerow([
        'Date', 'Merchant', 'Amount', 'Type', 'Category',
        'Card Type', 'Points Earned', 'Points Program',
@@ -426,5 +413,4 @@ def create_csv_content(data):
    
    csv_content = output.getvalue()
    output.close()
-   
    return csv_content
