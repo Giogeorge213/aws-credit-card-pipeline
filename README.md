@@ -104,3 +104,20 @@ Statement PDFs should follow the format: `YYYYMMDD*.pdf` where the date prefix r
 | Textract VPC Endpoint | ~$7 |
 | S3, Lambda, Glue, Athena | < $1 |
 | **Total** | **~$17/month** |
+
+## Next Steps
+
+### Migrate to psycopg2 with Docker
+Replace pg8000 with psycopg2 (industry standard PostgreSQL driver) using Docker to build Lambda-compatible packages:
+```bash
+docker run -v $(pwd):/var/task public.ecr.aws/lambda/python:3.12 \
+  pip install psycopg2-binary -t /var/task/python/
+```
+This ensures compiled C extensions match Lambda's Amazon Linux 2023 environment.
+
+### Add Lambda Functions for Other Cards
+- **Amex Gold** - 4x Dining, 4x Groceries, 3x Flights, 1x Other (MR points)
+- **Amex Platinum** - 5x Flights, 5x Hotels via Amex Travel, 1x Other (MR points)
+- **Capital One Venture X** - 10x Hotels/Cars via portal, 5x Flights, 2x Other
+- **Citi Custom Cash** - 5x Top category (up to $500/mo), 1x Other
+- **Chase Freedom Flex** - 5x Rotating categories, 3x Dining, 1x Other (UR points)
